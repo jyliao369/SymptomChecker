@@ -5,11 +5,11 @@
         <h2>What Are You Feeling?</h2>
         <div class="symptomForm">
           <select class="symptoms" v-model="symptom">
-            <option v-for="(symptom, index) in symptoms" :key="index">
+            <option v-for="(symptom, index) in listofSymptoms" :key="index">
               {{ symptom.Name }}
             </option>
           </select>
-          <button @click="addSymptom" class="addBtn">Add</button>
+          <button @click="addSymptom()" class="addBtn">Add</button>
         </div>
       </div>
       <hr />
@@ -39,6 +39,7 @@ export default {
   props: ["symptoms"],
   data() {
     return {
+      listofSymptoms: [],
       symptom: "",
       allSymptoms: [],
     };
@@ -46,14 +47,30 @@ export default {
   methods: {
     addSymptom() {
       this.allSymptoms.push(this.symptom);
+      for (let a = 0; a <= this.listofSymptoms.length; a++) {
+        if (this.listofSymptoms[a].Name === this.symptom) {
+          let index = a;
+          this.listofSymptoms.splice(index, 1);
+          break;
+        }
+      }
       this.symptom = "";
     },
     clearList() {
       this.allSymptoms = [];
+      this.listofSymptoms = [];
+      for (let a = 0; a < this.symptoms.length; a++) {
+        this.listofSymptoms.push(this.symptoms[a]);
+      }
     },
     closeModal() {
       this.$emit("close");
     },
+  },
+  mounted() {
+    for (let a = 0; a < this.symptoms.length; a++) {
+      this.listofSymptoms.push(this.symptoms[a]);
+    }
   },
 };
 </script>
@@ -95,7 +112,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-height: 191px;
+  min-height: 200px;
   margin-top: 15px;
   margin-bottom: 15px;
 }

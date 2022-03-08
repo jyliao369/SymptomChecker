@@ -2,7 +2,14 @@
   <div class="backdrop">
     <div class="container">
       <div>
-        <h2>What Are You Feeling?</h2>
+        <h2>What Are You Currently Feeling?</h2>
+        <div class="infoForm">
+          <select class="sexForm">
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+          <input placeholder="Age Ex. 1989" class="ageForm" />
+        </div>
         <div class="symptomForm">
           <select class="symptoms" v-model="symptom">
             <option v-for="(symptom, index) in listofSymptoms" :key="index">
@@ -28,7 +35,7 @@
       <div class="btns">
         <button @click="clearList" class="clearBtn">Clear Symptoms</button>
         <button @click.self="closeModal" class="canBtn">Cancel</button>
-        <button class="diagBtn">Diagnose</button>
+        <button @click.self="getDiagnosis" class="diagBtn">Diagnose</button>
       </div>
     </div>
   </div>
@@ -64,6 +71,10 @@ export default {
       }
     },
     closeModal() {
+      this.$emit("close");
+    },
+    getDiagnosis() {
+      this.$emit("getDiagnosis", this.allSymptoms);
       this.$emit("close");
     },
   },
@@ -102,11 +113,26 @@ export default {
   border-radius: 5px;
 }
 .addBtn {
-  font-size: 20px;
+  font-size: 15px;
   padding-left: 15px;
   padding-right: 15px;
   border-radius: 5px;
   border: none;
+}
+.infoForm {
+  display: flex;
+  margin-bottom: 15px;
+}
+.ageForm {
+  width: 100%;
+  font-size: 15px;
+  padding: 10px;
+}
+.sexForm {
+  width: 30%;
+  font-size: 15px;
+  padding: 10px;
+  margin-right: 15px;
 }
 .curSympCon {
   display: flex;

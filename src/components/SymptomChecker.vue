@@ -31,20 +31,28 @@ export default {
     openSymptomModal() {
       this.showSymptomModal = !this.showSymptomModal;
     },
-    getDiagnosis(symptoms) {
-      let patientSymp = symptoms;
-      console.log(patientSymp);
-      console.log(patientSymp.length);
+    getDiagnosis(symptoms, age, sex) {
+      console.log("age: " + age);
+      console.log("sex: " + sex);
       // THIS WILL GET THE IDs FOR SYMPTOMS
-      for (let a = 0; a <= patientSymp.length - 1; a++) {
+      for (let a = 0; a <= symptoms.length - 1; a++) {
         for (let b = 0; b <= this.symptoms.length; b++) {
-          if (patientSymp[a] === this.symptoms[b].Name) {
+          if (symptoms[a] === this.symptoms[b].Name) {
             this.symptomsID.push(this.symptoms[b].ID);
             break;
           }
         }
       }
-      console.log(this.symptomsID);
+      // console.log(JSON.stringify(this.symptomsID));
+      fetch(
+        `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
+          this.symptomsID
+        )}&gender=${sex}&year_of_birth=${age}&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDY3OTA3MzUsIm5iZiI6MTY0Njc4MzUzNX0.Mu2G6t1uOj2bRSo_souyWbS8F_sx_4WTqCJ1IvaQgs0&format=json&language=en-gb`
+      )
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err.message));
+      this.symptomsID = [];
     },
   },
   // mounted() {

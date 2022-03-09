@@ -4,11 +4,11 @@
       <div>
         <h2>What Are You Currently Feeling?</h2>
         <div class="infoForm">
-          <select class="sexForm">
+          <select class="sexForm" v-model="sex">
             <option>Male</option>
             <option>Female</option>
           </select>
-          <input placeholder="Age Ex. 1989" class="ageForm" />
+          <input placeholder="Age Ex. 1989" class="ageForm" v-model="age" />
         </div>
         <div class="symptomForm">
           <select class="symptoms" v-model="symptom">
@@ -48,6 +48,8 @@ export default {
     return {
       listofSymptoms: [],
       symptom: "",
+      sex: "",
+      age: "",
       allSymptoms: [],
     };
   },
@@ -74,7 +76,7 @@ export default {
       this.$emit("close");
     },
     getDiagnosis() {
-      this.$emit("getDiagnosis", this.allSymptoms);
+      this.$emit("getDiagnosis", this.allSymptoms, this.age, this.sex);
       this.$emit("close");
     },
   },

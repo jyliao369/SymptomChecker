@@ -8,7 +8,12 @@
             <option>Male</option>
             <option>Female</option>
           </select>
-          <input placeholder="Age Ex. 1989" class="ageForm" v-model="age" />
+          <input
+            placeholder="Age Ex. 1989"
+            class="ageForm"
+            type="number"
+            v-model="age"
+          />
         </div>
         <div class="symptomForm">
           <select class="symptoms" v-model="symptom">
@@ -35,7 +40,7 @@
       <div class="btns">
         <button @click="clearList" class="clearBtn">Clear Symptoms</button>
         <button @click.self="closeModal" class="canBtn">Cancel</button>
-        <button @click.self="getDiagnosis" class="diagBtn">Diagnose</button>
+        <button @click.self="getPatientData" class="diagBtn">Diagnose</button>
       </div>
     </div>
   </div>
@@ -75,8 +80,8 @@ export default {
     closeModal() {
       this.$emit("close");
     },
-    getDiagnosis() {
-      this.$emit("getDiagnosis", this.allSymptoms, this.age, this.sex);
+    getPatientData() {
+      this.$emit("getPatientData", this.allSymptoms, this.age, this.sex);
       this.$emit("close");
     },
   },

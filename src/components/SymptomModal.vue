@@ -4,7 +4,7 @@
       <div>
         <h2>What Are You Currently Feeling?</h2>
         <div class="infoForm">
-          <select class="sexForm" v-model="sex">
+          <select class="sexForm" v-model="sex" required>
             <option>Male</option>
             <option>Female</option>
           </select>
@@ -13,6 +13,7 @@
             class="ageForm"
             type="number"
             v-model="age"
+            required
           />
         </div>
         <div class="symptomForm">

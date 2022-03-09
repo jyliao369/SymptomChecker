@@ -6,11 +6,13 @@
       @getPatientData="getPatientData"
     />
   </div>
-  <div>
-    <h1>SymptomU or uHealth or iHealthy</h1>
-    <h3>{{ symptoms }}</h3>
+  <div class="diaContainer">
+    <div class="diagnosisForm">
+      <h1>SymptomU or uHealth or iHealthy</h1>
+      <button @click="openSymptomModal">Get A Diagnosis</button>
+      <h3>{{ symptoms }}</h3>
+    </div>
   </div>
-  <button @click="openSymptomModal">Get A Diagnosis</button>
 </template>
 
 <script>
@@ -38,10 +40,9 @@ export default {
       this.showSymptomModal = !this.showSymptomModal;
     },
     getPatientData(symptoms, age, sex) {
-      console.log("age: " + age);
       this.age = age;
-      console.log("sex: " + sex);
       this.sex = sex;
+      this.symptomsID = [];
       // THIS WILL GET THE IDs FOR SYMPTOMS
       for (let a = 0; a <= symptoms.length - 1; a++) {
         for (let b = 0; b <= this.symptoms.length; b++) {
@@ -54,6 +55,9 @@ export default {
       this.getDiagnosis();
     },
     getDiagnosis() {
+      console.log(this.age);
+      console.log(this.sex);
+      console.log(this.symptomsID);
       fetch(
         `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
           this.symptomsID
@@ -78,4 +82,14 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.diaContainer {
+  display: flex;
+  justify-content: center;
+}
+.diagnosisForm {
+  display: flex;
+  flex-direction: column;
+  max-width: 750px;
+}
+</style>

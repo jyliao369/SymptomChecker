@@ -45,23 +45,26 @@
           official diagosis.
         </p>
       </div>
-      <div class="diaInfo">
-        <div>
-          <h2>Accuracy (%):</h2>
+      <br />
+      <div class="diagnosisResult">
+        <div class="diaInfo">
+          <h3 class="accInfo">Accuracy (%):</h3>
+          <h3 class="conInfo">Condition Name:</h3>
         </div>
-        <div>
-          <h2>Condition Name:</h2>
-        </div>
-      </div>
-      <div>
-        <div v-for="(diagnosis, index) in this.diagnosis" :key="index">
-          <h3>
-            {{ diagnosis.Issue.Accuracy }}% - {{ diagnosis.Issue.ProfName }} -
-            {{ diagnosis.Issue.Name }}
+
+        <div
+          class="diaInfo"
+          v-for="(diagnosis, index) in this.diagnosis"
+          :key="index"
+        >
+          <h3 class="accInfo">{{ diagnosis.Issue.Accuracy }}%</h3>
+          <h3 class="conInfo">
+            {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
           </h3>
         </div>
+        <br />
+        <div><h2>Specialists and Doctors:</h2></div>
       </div>
-      <div><h2>Specialists and Doctors:</h2></div>
     </div>
   </div>
 </template>
@@ -164,8 +167,23 @@ export default {
 .issueDis {
   text-align: left;
 }
+.diagnosisResult {
+  display: flex;
+  flex-direction: column;
+}
 .diaInfo {
   display: flex;
   flex-direction: row;
+}
+.accInfo {
+  display: flex;
+  width: 155px;
+  text-align: left;
+  margin: 0px;
+}
+.conInfo {
+  display: flex;
+  text-align: left;
+  margin: 0px;
 }
 </style>

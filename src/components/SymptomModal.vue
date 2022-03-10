@@ -3,8 +3,12 @@
     <div class="container">
       <div>
         <h2>What Are You Currently Feeling?</h2>
+        <div class="nameInfo">
+          <input placeholder="Your Name" class="name" v-model="name" />
+        </div>
         <div class="infoForm">
-          <select class="sexForm" v-model="sex" required>
+          <select class="sexForm" v-model="sex">
+            <option value="" disabled selected>Sex</option>
             <option>Male</option>
             <option>Female</option>
           </select>
@@ -13,16 +17,19 @@
             class="ageForm"
             type="number"
             v-model="age"
-            required
           />
         </div>
         <div class="symptomForm">
-          <select class="symptoms" v-model="symptom">
-            <option v-for="(symptom, index) in listofSymptoms" :key="index">
+          <select class="symptoms" v-model="symptom" @change="addSymptom">
+            <option value="" disabled selected>Choose your Symptoms</option>
+            <option
+              v-for="(symptom, index) in listofSymptoms"
+              :key="index"
+              @change="addSymptom"
+            >
               {{ symptom.Name }}
             </option>
           </select>
-          <button @click="addSymptom()" class="addBtn">Add</button>
         </div>
       </div>
       <hr />
@@ -56,6 +63,7 @@ export default {
       symptom: "",
       sex: "",
       age: "",
+      name: "",
       allSymptoms: [],
     };
   },
@@ -82,7 +90,13 @@ export default {
       this.$emit("close");
     },
     getPatientData() {
-      this.$emit("getPatientData", this.allSymptoms, this.age, this.sex);
+      this.$emit(
+        "getPatientData",
+        this.allSymptoms,
+        this.age,
+        this.sex,
+        this.name
+      );
       this.$emit("close");
     },
   },
@@ -113,11 +127,20 @@ export default {
   display: flex;
   margin-bottom: 15px;
 }
+.nameInfo {
+  display: flex;
+  margin-bottom: 15px;
+}
+.name {
+  box-sizing: border-box;
+  font-size: 15px;
+  padding: 10px;
+  width: 100%;
+}
 .symptoms {
   width: 100%;
-  font-size: 20px;
+  font-size: 15px;
   padding: 10px;
-  margin-right: 15px;
   border-radius: 5px;
 }
 .addBtn {

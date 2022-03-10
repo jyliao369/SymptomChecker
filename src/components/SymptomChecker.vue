@@ -6,11 +6,46 @@
       @getPatientData="getPatientData"
     />
   </div>
+
+  <div>
+    <h1>SymptomU or uHealth or iHealthy</h1>
+    <button @click="openSymptomModal">Get A Diagnosis</button>
+  </div>
+
+  <br />
+
   <div class="diaContainer">
     <div class="diagnosisForm">
-      <h1>SymptomU or uHealth or iHealthy</h1>
-      <button @click="openSymptomModal">Get A Diagnosis</button>
-      <h3>{{ symptoms }}</h3>
+      <div>
+        <h2>Patient Chart</h2>
+      </div>
+      <div class="patientInfo">
+        <h3>Name: {{ this.name }}</h3>
+        <h3>Sex: {{ this.sex }}</h3>
+        <h3>Age (Year): {{ this.age }}</h3>
+      </div>
+      <div>
+        <h2>Current Symptoms Include:</h2>
+      </div>
+      <div class="symptomsInfo">
+        <h3 v-for="(symptom, index) in this.patientSym" :key="index">
+          {{ symptom }}
+        </h3>
+      </div>
+      <div>
+        <h2>Potential Issues and Conditions:</h2>
+        <p class="issueDis">
+          Below are potential issues and conditions you may have based on the
+          provided symptoms. These conditions have a percentage dictating the
+          accuracy of the condition related to the symptoms provided. Many
+          conditions and issues can have the same symptoms thus the conditions
+          presented have a percentage to determine which condition is more
+          likely. DISCLAIMER: This is not a replacement for an OFFICIAL
+          diagnosis. Please, see a doctor for serious conditions or for an
+          official diagosis.
+        </p>
+      </div>
+      <div><h2>Specialists and Doctors:</h2></div>
     </div>
   </div>
 </template>
@@ -26,8 +61,10 @@ export default {
       symptomsID: [],
       sex: "",
       age: "",
+      name: "",
+      patientSym: [],
       SymptomKey:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDY4NDg0NjgsIm5iZiI6MTY0Njg0MTI2OH0.HBF5Yvx56Ku_u5w4igSWcOSTB-yzeCevM0-tBSr_VVw",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDY4Nzk2OTEsIm5iZiI6MTY0Njg3MjQ5MX0.8byezIvWTz2Yb9l0D6VjRqnMJtTy7feWz89otHoZ_kE",
       DiagnosisKey:
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDY4NDg3NDEsIm5iZiI6MTY0Njg0MTU0MX0.JbdWocYa9JVGlw9Yb7uCvjszxlUwgb72F2VVaZM-B1c",
     };
@@ -39,9 +76,11 @@ export default {
     openSymptomModal() {
       this.showSymptomModal = !this.showSymptomModal;
     },
-    getPatientData(symptoms, age, sex) {
+    getPatientData(symptoms, age, sex, name) {
       this.age = age;
       this.sex = sex;
+      this.name = name;
+      this.patientSym = symptoms;
       this.symptomsID = [];
       // THIS WILL GET THE IDs FOR SYMPTOMS
       for (let a = 0; a <= symptoms.length - 1; a++) {
@@ -55,9 +94,6 @@ export default {
       this.getDiagnosis();
     },
     getDiagnosis() {
-      console.log(this.age);
-      console.log(this.sex);
-      console.log(this.symptomsID);
       fetch(
         `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
           this.symptomsID
@@ -90,6 +126,22 @@ export default {
 .diagnosisForm {
   display: flex;
   flex-direction: column;
-  max-width: 750px;
+  justify-content: space-between;
+  border-style: solid;
+  width: 750px;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.patientInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.issueDis {
+  text-align: left;
 }
 </style>

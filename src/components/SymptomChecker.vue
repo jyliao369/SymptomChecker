@@ -32,6 +32,7 @@
           {{ symptom }}
         </h3>
       </div>
+
       <div>
         <h2>Potential Issues and Conditions:</h2>
         <p class="issueDis">
@@ -45,7 +46,9 @@
           official diagosis.
         </p>
       </div>
+
       <br />
+
       <div class="diagnosisResult">
         <div class="diaInfo">
           <h3 class="accInfo">Accuracy (%):</h3>
@@ -62,8 +65,49 @@
             {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
           </h3>
         </div>
-        <br />
-        <div><h2>Specialists and Doctors:</h2></div>
+      </div>
+
+      <br />
+
+      <div class="docRec">
+        <div>
+          <h2>Doctors and Specialists:</h2>
+          <p class="docDis">
+            Below are a list of recommended doctors and specialists you may want
+            to consult for more information or for conformation on your
+            conditions. The each specialisation/doctor recommendation is split
+            based on the issue or condition. DISCLAIMER: this is not a
+            substitute for an official diagnosis. If you are feeling serious
+            illness or side effects please see a doctor right away.
+          </p>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="docResult">
+        <div class="docInfo">
+          <h3 class="condInfo">Conditions:</h3>
+          <h3 class="specInfo">Doctors and Specialists:</h3>
+        </div>
+
+        <div
+          class="diaInfo"
+          v-for="(diagnosis, index) in this.diagnosis"
+          :key="index"
+        >
+          <h3 class="condInfo">
+            {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
+          </h3>
+          <div class="specInfo">
+            <h3
+              v-for="(doctor, index) in diagnosis.Specialisation"
+              :key="index"
+            >
+              {{ index }}. {{ doctor.Name }}
+            </h3>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -85,10 +129,8 @@ export default {
       diagnosis: [],
       conditions: [],
       specialisation: [],
-      SymptomKey:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDY5MzQ4OTAsIm5iZiI6MTY0NjkyNzY5MH0.QPWOwWDWz2ktWIq6rD-nFHtI9MBVIFrYvuliJwP_TPY",
-      DiagnosisKey:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDY5MzQ4OTAsIm5iZiI6MTY0NjkyNzY5MH0.QPWOwWDWz2ktWIq6rD-nFHtI9MBVIFrYvuliJwP_TPY",
+      APItoken:
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcwMjA1MzcsIm5iZiI6MTY0NzAxMzMzN30.mnNE1THnTNRlxFAICVm67YiQspHDUqiHml-lwItOtes",
     };
   },
   components: {
@@ -99,7 +141,7 @@ export default {
       this.showSymptomModal = !this.showSymptomModal;
     },
     getPatientData(symptoms, age, sex, name) {
-      this.age = age;
+      this.age = Date().split(" ")[3] - age;
       this.sex = sex;
       this.name = name;
       this.patientSym = symptoms;
@@ -120,7 +162,7 @@ export default {
         `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
           this.symptomsID
         )}&gender=${this.sex}&year_of_birth=${this.age}&token=${
-          this.DiagnosisKey
+          this.APItoken
         }&format=json&language=en-gb`
       )
         .then((response) => response.json())
@@ -131,7 +173,7 @@ export default {
   },
   mounted() {
     fetch(
-      `https://sandbox-healthservice.priaid.ch/symptoms?token=${this.SymptomKey}&format=json&language=en-gb`
+      `https://sandbox-healthservice.priaid.ch/symptoms?token=${this.APItoken}&format=json&language=en-gb`
     )
       .then((response) => response.json())
       .then((data) => (this.symptoms = data))
@@ -157,6 +199,7 @@ export default {
   padding: 15px;
   padding-left: 30px;
   padding-right: 30px;
+  padding-bottom: 30px;
 }
 .patientInfo {
   display: flex;
@@ -164,26 +207,44 @@ export default {
   justify-content: space-between;
   width: 100%;
 }
-.issueDis {
+.issueDis,
+.docDis {
   text-align: left;
 }
 .diagnosisResult {
   display: flex;
   flex-direction: column;
 }
-.diaInfo {
+.diaInfo,
+.docInfo {
   display: flex;
   flex-direction: row;
 }
-.accInfo {
-  display: flex;
-  width: 155px;
-  text-align: left;
+.diaInfo h3,
+.docInfo h3 {
   margin: 0px;
 }
-.conInfo {
-  display: flex;
+.condInfo,
+.accInfo {
   text-align: left;
-  margin: 0px;
+  border-style: solid;
+  border-width: thin;
+  width: 25%;
+  padding-bottom: 15px;
+  padding-top: 1.5px;
+  padding-left: 2.5px;
+}
+.specInfo,
+.conInfo {
+  text-align: left;
+  border-style: solid;
+  border-width: thin;
+  width: 75%;
+  width: 75%;
+  padding-top: 1.5px;
+  padding-left: 2.5px;
+}
+.condInfo {
+  width: 35%;
 }
 </style>

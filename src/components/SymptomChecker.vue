@@ -10,6 +10,7 @@
   <div>
     <h1>SymptomU or uHealth or iHealthy</h1>
     <button @click="openSymptomModal">Get A Diagnosis</button>
+    <button @click="getMedicalTerm">Get Term</button>
   </div>
 
   <br />
@@ -50,9 +51,10 @@
       <br />
 
       <div class="diagnosisResult">
-        <div class="diaInfo">
+        <div class="diaHeader">
           <h3 class="accInfo">Accuracy (%):</h3>
           <h3 class="conInfo">Condition Name:</h3>
+          <h3 class="termInfo">Add. Info</h3>
         </div>
 
         <div
@@ -60,10 +62,16 @@
           v-for="(diagnosis, index) in this.diagnosis"
           :key="index"
         >
-          <h3 class="accInfo">{{ diagnosis.Issue.Accuracy }}%</h3>
-          <h3 class="conInfo">
-            {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
-          </h3>
+          <div class="info">
+            <h3 class="accInfo">{{ diagnosis.Issue.Accuracy }}%</h3>
+            <h3 class="conInfo">
+              {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
+            </h3>
+            <h3 class="termInfo">Click Here</h3>
+          </div>
+          <div class="term">
+            <p>{{ this.termsList[index] }}</p>
+          </div>
         </div>
       </div>
 
@@ -104,7 +112,7 @@
               v-for="(doctor, index) in diagnosis.Specialisation"
               :key="index"
             >
-              {{ index }}. {{ doctor.Name }}
+              {{ index + 1 }}. {{ doctor.Name }}
             </h3>
           </div>
         </div>
@@ -129,8 +137,10 @@ export default {
       diagnosis: [],
       conditions: [],
       specialisation: [],
+      termsList: [],
       APItoken:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcwMjA1MzcsIm5iZiI6MTY0NzAxMzMzN30.mnNE1THnTNRlxFAICVm67YiQspHDUqiHml-lwItOtes",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcwNDU2MTQsIm5iZiI6MTY0NzAzODQxNH0.jFGaz6RP1H9TXA1lKcl7ndoWVvTg24UYKnCPCpmzm2I",
+      termToken: "20ede4fa-246b-439a-a38d-d9f84101fd1b",
     };
   },
   components: {
@@ -169,6 +179,17 @@ export default {
         // .then((data) => console.log(data))
         .then((data) => (this.diagnosis = data))
         .catch((err) => console.log(err.message));
+    },
+    getMedicalTerm() {
+      for (let a = 0; a <= this.diagnosis.length - 1; a++) {
+        fetch(
+          `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.diagnosis[a].Issue.ProfName}?key=${this.termToken}`
+        )
+          .then((response) => response.json())
+          .then((data) => this.termsList.push(data[0].shortdef))
+          .catch((err) => console.log(err.message));
+      }
+      console.log(this.termsList[0]);
     },
   },
   mounted() {
@@ -215,36 +236,43 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.diaInfo,
-.docInfo {
+.diaInfo h3,
+p {
+  margin: 0px;
+}
+.diaHeader {
   display: flex;
   flex-direction: row;
 }
-.diaInfo h3,
-.docInfo h3 {
+.diaHeader h3 {
   margin: 0px;
 }
-.condInfo,
+.info {
+  display: flex;
+  flex-direction: row;
+}
 .accInfo {
-  text-align: left;
   border-style: solid;
-  border-width: thin;
-  width: 25%;
-  padding-bottom: 15px;
-  padding-top: 1.5px;
-  padding-left: 2.5px;
+  width: 20%;
+  text-align: left;
+  padding-left: 7px;
+  padding-bottom: 12px;
 }
-.specInfo,
 .conInfo {
-  text-align: left;
   border-style: solid;
-  border-width: thin;
-  width: 75%;
-  width: 75%;
-  padding-top: 1.5px;
-  padding-left: 2.5px;
+  width: 65%;
+  text-align: left;
+  padding-left: 2px;
 }
-.condInfo {
-  width: 35%;
+.termInfo {
+  border-style: solid;
+  width: 15%;
+  text-align: left;
+  padding-left: 12px;
+}
+.term {
+  border-style: solid;
+  text-align: left;
+  padding: 15px;
 }
 </style>

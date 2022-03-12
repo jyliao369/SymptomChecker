@@ -67,10 +67,13 @@
             <h3 class="conInfo">
               {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
             </h3>
-            <h3 class="termInfo">Click Here</h3>
+            <h3 @click="showDetail(index)" class="termInfo">Click Here</h3>
           </div>
-          <div class="term">
-            <p>{{ this.termsList[index] }}</p>
+          <div class="term" v-if="this.termsList[index].show">
+            <p>
+              {{ this.termsList[index].term1 }} -
+              {{ this.termsList[index].term2 }}
+            </p>
           </div>
         </div>
       </div>
@@ -139,7 +142,7 @@ export default {
       specialisation: [],
       termsList: [],
       APItoken:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcwNDU2MTQsIm5iZiI6MTY0NzAzODQxNH0.jFGaz6RP1H9TXA1lKcl7ndoWVvTg24UYKnCPCpmzm2I",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcxMTUwMjcsIm5iZiI6MTY0NzEwNzgyN30.Os39qpuo3KNOzI3xN_zssGJ3_1lFiNnMn_jVFT7WS2o",
       termToken: "20ede4fa-246b-439a-a38d-d9f84101fd1b",
     };
   },
@@ -166,30 +169,51 @@ export default {
         }
       }
       this.getDiagnosis();
+      // this.getMedicalTerm();
     },
     getDiagnosis() {
-      fetch(
-        `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
-          this.symptomsID
-        )}&gender=${this.sex}&year_of_birth=${this.age}&token=${
-          this.APItoken
-        }&format=json&language=en-gb`
-      )
-        .then((response) => response.json())
-        // .then((data) => console.log(data))
-        .then((data) => (this.diagnosis = data))
-        .catch((err) => console.log(err.message));
-    },
-    getMedicalTerm() {
-      for (let a = 0; a <= this.diagnosis.length - 1; a++) {
+      try {
         fetch(
-          `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.diagnosis[a].Issue.ProfName}?key=${this.termToken}`
+          `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
+            this.symptomsID
+          )}&gender=${this.sex}&year_of_birth=${this.age}&token=${
+            this.APItoken
+          }&format=json&language=en-gb`
         )
           .then((response) => response.json())
-          .then((data) => this.termsList.push(data[0].shortdef))
+          // .then((data) => console.log(data))
+          .then((data) => (this.diagnosis = data))
+          .then(() => {
+            this.termsList = [];
+            for (let a = 0; a <= this.diagnosis.length - 1; a++) {
+              this.termsList.push({
+                show: false,
+                term2: this.diagnosis[a].Issue.Name,
+                term1: this.diagnosis[a].Issue.ProfName,
+              });
+            }
+          })
           .catch((err) => console.log(err.message));
+      } catch (err) {
+        console.log(err);
       }
-      console.log(this.termsList[0]);
+    },
+    // getMedicalTerm() {
+    //   this.termsList = [];
+    //   for (let a = 0; a <= this.diagnosis.length - 1; a++) {
+    //     fetch(
+    //       `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.diagnosis[a].Issue.ProfName}?key=${this.termToken}`
+    //     )
+    //       .then((response) => response.json())
+    //       .then((data) =>
+    //         this.termsList.push({ show: false, term: data[0].shortdef })
+    //       )
+    //       .catch((err) => console.log(err.message));
+    //   }
+    //   console.log(this.termsList);
+    // },
+    showDetail(number) {
+      this.termsList[number].show = !this.termsList[number].show;
     },
   },
   mounted() {
@@ -253,6 +277,7 @@ p {
 }
 .accInfo {
   border-style: solid;
+  border-width: thin;
   width: 20%;
   text-align: left;
   padding-left: 7px;
@@ -260,18 +285,21 @@ p {
 }
 .conInfo {
   border-style: solid;
+  border-width: thin;
   width: 65%;
   text-align: left;
-  padding-left: 2px;
+  padding-left: 7px;
 }
 .termInfo {
   border-style: solid;
+  border-width: thin;
   width: 15%;
   text-align: left;
   padding-left: 12px;
 }
 .term {
   border-style: solid;
+  border-width: thin;
   text-align: left;
   padding: 15px;
 }

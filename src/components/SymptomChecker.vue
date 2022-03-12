@@ -11,6 +11,7 @@
     <h1>SymptomU or uHealth or iHealthy</h1>
     <button @click="openSymptomModal">Get A Diagnosis</button>
     <button @click="getMedicalTerm">Get Term</button>
+    <button @click="testFetch">test</button>
   </div>
 
   <br />
@@ -69,10 +70,13 @@
             </h3>
             <h3 @click="showDetail(index)" class="termInfo">Click Here</h3>
           </div>
-          <div class="term" v-if="this.termsList[index].show">
+          <div class="term" v-if="this.defList[index].show">
             <p>
-              {{ this.termsList[index].term1 }} -
-              {{ this.termsList[index].term2 }}
+              {{ this.termsList[index].term1 }} - {{ this.defList[index].def1 }}
+            </p>
+            <p>
+              {{ this.termsList[index].term2 }} -
+              {{ this.defList[index].def2 }}
             </p>
           </div>
         </div>
@@ -122,6 +126,7 @@
       </div>
     </div>
   </div>
+  {{ this.defList }}
 </template>
 
 <script>
@@ -141,8 +146,10 @@ export default {
       conditions: [],
       specialisation: [],
       termsList: [],
+      def: "",
+      defList: [],
       APItoken:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcxMTUwMjcsIm5iZiI6MTY0NzEwNzgyN30.Os39qpuo3KNOzI3xN_zssGJ3_1lFiNnMn_jVFT7WS2o",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcxMjI2MDYsIm5iZiI6MTY0NzExNTQwNn0.hdmuDVj-f5iWZa3pxBRrNj2vmYYQOmnpbk3qV5MfvmU",
       termToken: "20ede4fa-246b-439a-a38d-d9f84101fd1b",
     };
   },
@@ -183,14 +190,45 @@ export default {
           .then((response) => response.json())
           // .then((data) => console.log(data))
           .then((data) => (this.diagnosis = data))
+
           .then(() => {
             this.termsList = [];
             for (let a = 0; a <= this.diagnosis.length - 1; a++) {
               this.termsList.push({
-                show: false,
                 term2: this.diagnosis[a].Issue.Name,
                 term1: this.diagnosis[a].Issue.ProfName,
               });
+            }
+          })
+
+          .then(() => {
+            this.defList = [];
+            for (let a = 0; a <= this.termsList.length - 1; a++) {
+              fetch(
+                `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[a].term1}?key=${this.termToken}`
+              )
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data[0].shortdef === "") {
+                    this.def = "";
+                  } else {
+                    this.def = data[0].shortdef;
+                  }
+                })
+                .catch((err) => console.log(err.message));
+
+              fetch(
+                `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[a].term2}?key=${this.termToken}`
+              )
+                .then((response) => response.json())
+                .then((data) =>
+                  this.defList.push({
+                    show: false,
+                    def1: this.def,
+                    def2: data[0].shortdef,
+                  })
+                )
+                .catch((err) => console.log(err.message));
             }
           })
           .catch((err) => console.log(err.message));
@@ -198,23 +236,17 @@ export default {
         console.log(err);
       }
     },
-    // getMedicalTerm() {
-    //   this.termsList = [];
-    //   for (let a = 0; a <= this.diagnosis.length - 1; a++) {
-    //     fetch(
-    //       `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.diagnosis[a].Issue.ProfName}?key=${this.termToken}`
-    //     )
-    //       .then((response) => response.json())
-    //       .then((data) =>
-    //         this.termsList.push({ show: false, term: data[0].shortdef })
-    //       )
-    //       .catch((err) => console.log(err.message));
-    //   }
-    //   console.log(this.termsList);
-    // },
     showDetail(number) {
-      this.termsList[number].show = !this.termsList[number].show;
+      this.defList[number].show = !this.defList[number].show;
     },
+    // testFetch() {
+    //   fetch(
+    //     `https://www.dictionaryapi.com/api/v3/references/medical/json/meteorism?key=20ede4fa-246b-439a-a38d-d9f84101fd1b`
+    //   )
+    //     .then((response) => response.json())
+    //     .then((data) => console.log(data[0].shortdef))
+    //     .catch((err) => console.log(err.message));
+    // },
   },
   mounted() {
     fetch(
@@ -291,11 +323,12 @@ p {
   padding-left: 7px;
 }
 .termInfo {
+  display: flex;
   border-style: solid;
   border-width: thin;
   width: 15%;
-  text-align: left;
-  padding-left: 12px;
+  align-items: center;
+  justify-content: center;
 }
 .term {
   border-style: solid;

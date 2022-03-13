@@ -10,8 +10,6 @@
   <div>
     <h1>SymptomU or uHealth or iHealthy</h1>
     <button @click="openSymptomModal">Get A Diagnosis</button>
-    <button @click="getMedicalTerm">Get Term</button>
-    <button @click="testFetch">test</button>
   </div>
 
   <br />
@@ -68,16 +66,38 @@
             <h3 class="conInfo">
               {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
             </h3>
-            <h3 @click="showDetail(index)" class="termInfo">Click Here</h3>
+            <h3 class="termInfo">Click Here</h3>
           </div>
-          <div class="term" v-if="this.defList[index].show">
-            <p>
-              {{ this.termsList[index].term1 }} - {{ this.defList[index].def1 }}
-            </p>
-            <p>
-              {{ this.termsList[index].term2 }} -
-              {{ this.defList[index].def2 }}
-            </p>
+
+          <div class="addDetail">
+            <div class="addInfo">
+              <p class="term">{{ termsList[index].term1 }}:</p>
+              <p class="def">{{ defList[index].def1 }}</p>
+            </div>
+            <hr />
+            <div class="addInfo">
+              <p class="term">{{ termsList[index].term2 }}:</p>
+              <p class="def">{{ defList[index].def2 }}</p>
+            </div>
+
+            <!-- <div>
+              <p
+                class="def"
+                v-for="(term, index) in this.termsList[index]"
+                :key="index"
+              >
+                {{ term }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="term"
+                v-for="(def, index) in this.defList[index]"
+                :key="index"
+              >
+                {{ def }}
+              </p>
+            </div> -->
           </div>
         </div>
       </div>
@@ -126,7 +146,21 @@
       </div>
     </div>
   </div>
-  {{ this.defList }}
+  {{ this.termsList[0] }}
+  <br />
+  {{ this.termsList[1] }}
+  <br />
+  {{ this.termsList[2] }}
+  <br />
+  {{ this.termsList[3] }}
+  <br />
+  {{ this.defList[0] }}
+  <br />
+  {{ this.defList[1] }}
+  <br />
+  {{ this.defList[2] }}
+  <br />
+  {{ this.defList[3] }}
 </template>
 
 <script>
@@ -147,9 +181,10 @@ export default {
       specialisation: [],
       termsList: [],
       def: "",
+      def2: "",
       defList: [],
       APItoken:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcxMjI2MDYsIm5iZiI6MTY0NzExNTQwNn0.hdmuDVj-f5iWZa3pxBRrNj2vmYYQOmnpbk3qV5MfvmU",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDcyMDYyMzUsIm5iZiI6MTY0NzE5OTAzNX0.UWiBT0daKi4uL7fcbBFCEpXTdonDFuzdn_WPwfo_L-4",
       termToken: "20ede4fa-246b-439a-a38d-d9f84101fd1b",
     };
   },
@@ -166,6 +201,7 @@ export default {
       this.name = name;
       this.patientSym = symptoms;
       this.symptomsID = [];
+      this.defList = [];
       // THIS WILL GET THE IDs FOR SYMPTOMS
       for (let a = 0; a <= symptoms.length - 1; a++) {
         for (let b = 0; b <= this.symptoms.length; b++) {
@@ -195,35 +231,22 @@ export default {
             this.termsList = [];
             for (let a = 0; a <= this.diagnosis.length - 1; a++) {
               this.termsList.push({
-                term2: this.diagnosis[a].Issue.Name,
-                term1: this.diagnosis[a].Issue.ProfName,
+                term1: this.diagnosis[a].Issue.Name,
+                term2: this.diagnosis[a].Issue.ProfName,
               });
-            }
-          })
-
-          .then(() => {
-            this.defList = [];
-            for (let a = 0; a <= this.termsList.length - 1; a++) {
               fetch(
-                `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[a].term1}?key=${this.termToken}`
+                `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.diagnosis[a].Issue.Name}?key=${this.termToken}`
               )
                 .then((response) => response.json())
-                .then((data) => {
-                  if (data[0].shortdef === "") {
-                    this.def = "";
-                  } else {
-                    this.def = data[0].shortdef;
-                  }
-                })
+                .then((data) => (this.def = data[0].shortdef))
                 .catch((err) => console.log(err.message));
 
               fetch(
-                `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[a].term2}?key=${this.termToken}`
+                `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.diagnosis[a].Issue.ProfName}?key=${this.termToken}`
               )
                 .then((response) => response.json())
                 .then((data) =>
                   this.defList.push({
-                    show: false,
                     def1: this.def,
                     def2: data[0].shortdef,
                   })
@@ -236,17 +259,6 @@ export default {
         console.log(err);
       }
     },
-    showDetail(number) {
-      this.defList[number].show = !this.defList[number].show;
-    },
-    // testFetch() {
-    //   fetch(
-    //     `https://www.dictionaryapi.com/api/v3/references/medical/json/meteorism?key=20ede4fa-246b-439a-a38d-d9f84101fd1b`
-    //   )
-    //     .then((response) => response.json())
-    //     .then((data) => console.log(data[0].shortdef))
-    //     .catch((err) => console.log(err.message));
-    // },
   },
   mounted() {
     fetch(
@@ -330,10 +342,24 @@ p {
   align-items: center;
   justify-content: center;
 }
-.term {
+.addDetail {
+  display: flex;
+  flex-direction: column;
   border-style: solid;
   border-width: thin;
   text-align: left;
   padding: 15px;
+}
+.addInfo {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 15px;
+}
+.term {
+  width: 22%;
+  padding-right: 10px;
+}
+.def {
+  width: 75%;
 }
 </style>

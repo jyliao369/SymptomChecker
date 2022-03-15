@@ -15,6 +15,7 @@ export default {
 <style>
 body {
   margin: 0px;
+  background: #5478e4;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

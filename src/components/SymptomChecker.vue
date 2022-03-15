@@ -8,12 +8,51 @@
   </div>
 
   <div>
-    <h1>SymptomU or uHealth or iHealthy</h1>
-    <button @click="openSymptomModal">Get A Diagnosis</button>
+    <h1 class="appTitle">iHealthy</h1>
+  </div>
+
+  <div v-if="!diagnosisForm" class="introCont">
+    <div class="introHeader">
+      <h2>Greetings and Welcome to iHealthy</h2>
+      <br />
+      <p>
+        iHealthy is a simple application with a ton of funtionality! It's very
+        important that we stay up to date on our knowledge of diseases and
+        conditions, especially when it occurs on ourselves. Getting sick is not
+        a great feeling and often times it goes unnoticed whether it be lack of
+        knowledge or just lack of resources. This won't solve all problems but
+        will alleviate some.
+      </p>
+      <br />
+      <p>
+        That's where iHealthy comes in. To put it simply iHealthy is simple
+        symptom checker that can give a diagnosis based on given symptoms. Many
+        conditions and illnesses have the same symptoms. As a result, the
+        results given by this application are ranked by accuracy giving you a
+        better understanding as to what you may be experiencing. Not only does
+        it give you the condition but provides a small summary of what the
+        condition is and how it imapcts you. Once a diagnosis is given, the
+        application also gives a list of doctors and specialists one would need
+        to visit in order to take the next step in resolving your condition or
+        issue.
+      </p>
+      <br />
+      <p>
+        The goal of this application is to help users understand what conditions
+        they are experiencing, provide knowledege and encourage them to seek
+        treatment. In addition to preventing diseases and illness, the
+        application can also teach users different conditions and illnesses, who
+        to talk and consult if the conditions become worse and to educate the
+        different kinds of illnesses and how it impacts our bodies.
+      </p>
+      <br />
+      <p>Click on the button below for a diagnosis</p>
+    </div>
   </div>
 
   <br />
-  <div class="diaContainer">
+
+  <div v-if="diagnosisForm" class="diaContainer">
     <div class="diagnosisForm">
       <div>
         <h2>Patient Chart</h2>
@@ -114,9 +153,10 @@
           v-for="(diagnosis, index) in this.diagnosis"
           :key="index"
         >
-          <h3 class="condInfo">
-            {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
-          </h3>
+          <div class="condInfo">
+            <h3>{{ diagnosis.Issue.ProfName }}</h3>
+            <h3>{{ diagnosis.Issue.Name }}</h3>
+          </div>
           <div class="specInfo">
             <h3
               v-for="(doctor, index) in diagnosis.Specialisation"
@@ -129,6 +169,12 @@
       </div>
     </div>
   </div>
+
+  <br />
+
+  <button class="getDiagnosis" @click="openSymptomModal">
+    Get a Diagnosis
+  </button>
 </template>
 
 <script>
@@ -137,6 +183,7 @@ import SymptomModal from "./SymptomModal.vue";
 export default {
   data() {
     return {
+      diagnosisForm: false,
       showSymptomModal: false,
       symptoms: [],
       symptomsID: [],
@@ -152,7 +199,7 @@ export default {
       def2: "",
       defList: [],
       APItoken:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDczMDg1NTAsIm5iZiI6MTY0NzMwMTM1MH0.dPzdvbgG2XhRWKFhi0oUJ-hGn7ciNeA6KCK9UcEL_G4",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0YXJyeWtuaWdodDM2OUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwNDAxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIyLTAzLTA2IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2NDczNzMyODQsIm5iZiI6MTY0NzM2NjA4NH0._uZsvV8B4KysGKt-g7GtuBq7tRd7XVYqfYyCl8m3_p8",
       termToken: "20ede4fa-246b-439a-a38d-d9f84101fd1b",
     };
   },
@@ -179,9 +226,9 @@ export default {
         }
       }
       this.getDiagnosis();
-      // this.getMedicalTerm();
     },
     getDiagnosis() {
+      this.diagnosisForm = true;
       this.termsList = [];
       this.defList = [];
       this.allList = [];
@@ -247,6 +294,28 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.appTitle {
+  color: #cce6e6;
+  font-size: 60px;
+}
+.introCont {
+  display: flex;
+  justify-content: center;
+}
+.introHeader {
+  width: 50%;
+  padding: 25px;
+  background: #e6f2f2;
+}
+.getDiagnosis {
+  width: 300px;
+  border: none;
+  font-size: 30px;
+  padding: 15px;
+  border-radius: 15px;
+  background: #ff4d56;
+  color: white;
+}
 .diaContainer {
   display: flex;
   justify-content: center;
@@ -256,18 +325,21 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   border-style: solid;
-  width: 750px;
+  width: 650px;
   margin-left: 15px;
   margin-right: 15px;
   padding: 15px;
   padding-left: 30px;
   padding-right: 30px;
   padding-bottom: 30px;
+  background: #eef2fc;
+  border-radius: 3px;
+  border-color: #4360b6;
 }
 .patientInfo {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
 }
 .issueDis,
@@ -331,7 +403,7 @@ p {
 }
 .termOne {
   display: flex;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 .termTwo {
   display: flex;

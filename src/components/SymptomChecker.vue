@@ -104,21 +104,23 @@
             <h3 class="conInfo">
               {{ diagnosis.Issue.ProfName }} - {{ diagnosis.Issue.Name }}
             </h3>
-            <h3 class="termInfo">Click Here</h3>
+            <h3 class="termInfo" @click="showAddDetail(index)">Click Here</h3>
           </div>
 
-          <div
-            v-for="(term, index) in this.defList[index]"
-            :key="index"
-            class="addDetail"
-          >
-            <div class="termOne">
-              <p class="word">{{ term.word1 }}</p>
-              <p class="def">{{ term.def1 }}</p>
-            </div>
-            <div class="termTwo">
-              <p class="word">{{ term.word2 }}</p>
-              <p class="def">{{ term.def2 }}</p>
+          <div>
+            <div
+              v-for="(term, index) in this.defList[index]"
+              :key="index"
+              class="addDetail"
+            >
+              <div class="termOne">
+                <p class="word">{{ term.word1 }}</p>
+                <p class="def">{{ term.def1 }}</p>
+              </div>
+              <div class="termTwo">
+                <p class="word">{{ term.word2 }}</p>
+                <p class="def">{{ term.def2 }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -267,6 +269,7 @@ export default {
               .then((data) =>
                 this.defList.push([
                   {
+                    show: false,
                     word1: this.termsList[b].term1,
                     word2: this.termsList[b].term2,
                     def1: this.def,
@@ -278,6 +281,14 @@ export default {
           }
         })
         .catch((err) => console.log(err.message));
+    },
+    showAddDetail(number) {
+      let allDetail = document.getElementsByClassName("addDetail");
+      if (allDetail[number].style.display === "block") {
+        allDetail[number].style.display = "none";
+      } else {
+        allDetail[number].style.display = "block";
+      }
     },
   },
   mounted() {
@@ -302,9 +313,11 @@ export default {
   justify-content: center;
 }
 .introHeader {
-  width: 50%;
+  max-width: 600px;
+  margin-left: 15px;
   padding: 25px;
   background: #e6f2f2;
+  margin-right: 15px;
 }
 .getDiagnosis {
   width: 300px;
@@ -324,7 +337,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   border-style: solid;
-  width: 650px;
+  width: 700px;
   margin-left: 15px;
   margin-right: 15px;
   padding: 15px;
@@ -388,7 +401,7 @@ p {
   justify-content: center;
 }
 .addDetail {
-  display: flex;
+  display: none;
   flex-direction: column;
   border-style: solid;
   border-width: thin;

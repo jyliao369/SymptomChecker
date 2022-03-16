@@ -48,7 +48,15 @@
       <div class="btns">
         <button @click="clearList" class="clearBtn">Clear Symptoms</button>
         <button @click.self="closeModal" class="canBtn">Cancel</button>
-        <button @click.self="getPatientData" class="diagBtn">Diagnose</button>
+        <button
+          v-if="this.sex === '' || this.age === '' || this.name === ''"
+          class="diagBtn"
+        >
+          Diagnose
+        </button>
+        <button v-else @click.self="getPatientData" class="diagBtn">
+          Diagnose
+        </button>
       </div>
     </div>
   </div>

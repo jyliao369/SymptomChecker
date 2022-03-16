@@ -234,7 +234,7 @@ export default {
       this.defList = [];
       this.allList = [];
       fetch(
-        `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
+        `https://healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
           this.symptomsID
         )}&gender=${this.sex}&year_of_birth=${this.age}&token=${
           this.APItoken
@@ -293,7 +293,7 @@ export default {
   },
   mounted() {
     fetch(
-      `https://sandbox-healthservice.priaid.ch/symptoms?token=${this.APItoken}&format=json&language=en-gb`
+      `https://healthservice.priaid.ch/symptoms?token=${this.APItoken}&format=json&language=en-gb`
     )
       .then((response) => response.json())
       .then((data) => (this.symptoms = data))

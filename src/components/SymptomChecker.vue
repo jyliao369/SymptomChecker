@@ -177,6 +177,7 @@
   <button class="getDiagnosis" @click="openSymptomModal">
     Get a Diagnosis
   </button>
+  <button @click="test">test</button>
 </template>
 
 <script>
@@ -208,6 +209,21 @@ export default {
     SymptomModal,
   },
   methods: {
+    test() {
+      fetch(
+        // `https://www.dictionaryapi.com/api/v3/references/medical/json/heart%20attack?key=20ede4fa-246b-439a-a38d-d9f84101fd1b`
+        `https://www.dictionaryapi.com/api/v3/references/medical/json/Inflammation%20of%20the%20peritoneum?key=20ede4fa-246b-439a-a38d-d9f84101fd1b`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data[0].length === undefined) {
+            console.log(data[0].shortdef[0]);
+          } else {
+            console.log("no entry");
+          }
+        })
+        .catch((err) => console.log(err.message));
+    },
     openSymptomModal() {
       this.showSymptomModal = !this.showSymptomModal;
     },
@@ -259,24 +275,42 @@ export default {
               `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[b].term1}?key=${this.termToken}`
             )
               .then((response) => response.json())
-              .then((data) => (this.def = data[0].shortdef))
+              .then((data) => {
+                if (data[0].length === undefined) {
+                  this.def = data[0].shortdef;
+                } else {
+                  this.def = "No Entry";
+                }
+              })
               .catch((err) => console.log(err.message));
 
             fetch(
               `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[b].term2}?key=${this.termToken}`
             )
               .then((response) => response.json())
-              .then((data) =>
-                this.defList.push([
-                  {
-                    show: false,
-                    word1: this.termsList[b].term1,
-                    word2: this.termsList[b].term2,
-                    def1: this.def,
-                    def2: data[0].shortdef,
-                  },
-                ])
-              )
+              .then((data) => {
+                if (data[0].length === undefined) {
+                  this.defList.push([
+                    {
+                      show: false,
+                      word1: this.termsList[b].term1,
+                      word2: this.termsList[b].term2,
+                      def1: this.def,
+                      def2: data[0].shortdef,
+                    },
+                  ]);
+                } else {
+                  this.defList.push([
+                    {
+                      show: false,
+                      word1: this.termsList[b].term1,
+                      word2: this.termsList[b].term2,
+                      def1: this.def,
+                      def2: "No Entry",
+                    },
+                  ]);
+                }
+              })
               .catch((err) => console.log(err.message));
           }
         })

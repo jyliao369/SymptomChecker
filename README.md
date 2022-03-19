@@ -73,4 +73,4 @@ N/A
 
 Github Repo: https://github.com/jyliao369/SymptomChecker
 
-Deployed Link:
+Deployed Link: https://jyliao369.github.io/SymptomChecker/

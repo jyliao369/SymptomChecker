@@ -177,12 +177,12 @@
   <button class="getDiagnosis" @click="openSymptomModal">
     Get a Diagnosis
   </button>
-  <!-- <div v-for="(def, index) in this.defList" :key="index">
+  <div class="failsafe" v-for="(def, index) in this.defList" :key="index">
     <p>{{ def }}</p>
     <br />
   </div>
   <br />
-  <br /> -->
+  <br />
   <div class="failsafe" v-for="(def, index) in this.termsList" :key="index">
     <p>{{ def.term1 }} - {{ def.term2 }}</p>
     <br />
@@ -263,7 +263,7 @@ export default {
         })
 
         .then(() => {
-          for (let b = 0; b <= this.termsList.length - 1; b++) {
+          for (let b = 0; b <= this.termsList.length; b++) {
             fetch(
               `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[b].term1}?key=${this.termToken}`
             )
@@ -285,7 +285,6 @@ export default {
                 if (data[0].length === undefined) {
                   this.defList.push([
                     {
-                      show: false,
                       word1: this.termsList[b].term1,
                       word2: this.termsList[b].term2,
                       def1: this.def,
@@ -295,7 +294,6 @@ export default {
                 } else {
                   this.defList.push([
                     {
-                      show: false,
                       word1: this.termsList[b].term1,
                       word2: this.termsList[b].term2,
                       def1: this.def,

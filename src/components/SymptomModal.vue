@@ -1,62 +1,64 @@
 <template>
   <div class="backdrop">
-    <div class="container">
-      <div>
-        <h2>What Are You Currently Feeling?</h2>
-        <div class="nameInfo">
-          <input placeholder="Your Name" class="name" v-model="name" />
+    <div class="outContainer">
+      <div class="container">
+        <div>
+          <h2>What Are You Currently Feeling?</h2>
+          <div class="nameInfo">
+            <input placeholder="Your Name" class="name" v-model="name" />
+          </div>
+          <div class="infoForm">
+            <select class="sexForm" v-model="sex">
+              <option value="" disabled selected>Sex</option>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+            <input
+              placeholder="Age Ex. 1989"
+              class="ageForm"
+              type="number"
+              v-model="age"
+            />
+          </div>
+          <div class="symptomForm">
+            <select class="symptoms" v-model="symptom" @change="addSymptom">
+              <option value="" disabled selected>Choose your Symptoms</option>
+              <option
+                v-for="(symptom, index) in listofSymptoms"
+                :key="index"
+                @change="addSymptom"
+              >
+                {{ symptom.Name }}
+              </option>
+            </select>
+          </div>
         </div>
-        <div class="infoForm">
-          <select class="sexForm" v-model="sex">
-            <option value="" disabled selected>Sex</option>
-            <option>Male</option>
-            <option>Female</option>
-          </select>
-          <input
-            placeholder="Age Ex. 1989"
-            class="ageForm"
-            type="number"
-            v-model="age"
-          />
+        <hr />
+        <div class="curSympCon">
+          <h3>Symptoms currently experiencing:</h3>
+          <div v-if="allSymptoms.length <= 0">
+            <p>No Symptoms</p>
+          </div>
+          <div class="currentSymptom">
+            <p v-for="(symptom, index) in allSymptoms" :key="index">
+              {{ symptom }}
+            </p>
+          </div>
         </div>
-        <div class="symptomForm">
-          <select class="symptoms" v-model="symptom" @change="addSymptom">
-            <option value="" disabled selected>Choose your Symptoms</option>
-            <option
-              v-for="(symptom, index) in listofSymptoms"
-              :key="index"
-              @change="addSymptom"
-            >
-              {{ symptom.Name }}
-            </option>
-          </select>
+        <hr />
+        <div class="btns">
+          <button @click="clearList" class="clearBtn">Clear Symptoms</button>
+          <button @click.self="closeModal" class="canBtn">Cancel</button>
+          <button
+            v-if="this.sex === '' || this.age === '' || this.name === ''"
+            class="diagBtn"
+          >
+            Diagnose
+          </button>
+          <button v-else @click.self="getPatientData" class="diagBtn">
+            Diagnose
+          </button>
         </div>
-      </div>
-      <hr />
-      <div class="curSympCon">
-        <h3>Symptoms currently experiencing:</h3>
-        <div v-if="allSymptoms.length <= 0">
-          <p>No Symptoms</p>
-        </div>
-        <div class="currentSymptom">
-          <p v-for="(symptom, index) in allSymptoms" :key="index">
-            {{ symptom }}
-          </p>
-        </div>
-      </div>
-      <hr />
-      <div class="btns">
-        <button @click="clearList" class="clearBtn">Clear Symptoms</button>
-        <button @click.self="closeModal" class="canBtn">Cancel</button>
-        <button
-          v-if="this.sex === '' || this.age === '' || this.name === ''"
-          class="diagBtn"
-        >
-          Diagnose
-        </button>
-        <button v-else @click.self="getPatientData" class="diagBtn">
-          Diagnose
-        </button>
       </div>
     </div>
   </div>
@@ -124,12 +126,18 @@ export default {
   width: 100%;
   height: 100%;
 }
+.outContainer {
+  display: flex;
+  justify-content: center;
+}
 .container {
   width: 550px;
-  padding: 25px 35px 25px 35px;
-  margin: 100px auto;
+  padding: 15px 25px 15px 25px;
   background: white;
   border-radius: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 100px;
 }
 .symptomForm {
   display: flex;
@@ -206,6 +214,7 @@ export default {
 .btns {
   display: flex;
   justify-content: right;
+  flex-wrap: wrap;
   margin-top: 15px;
 }
 .clearBtn {

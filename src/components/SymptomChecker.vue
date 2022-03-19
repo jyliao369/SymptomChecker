@@ -113,15 +113,14 @@
               :key="index"
               class="addDetail"
             >
-              <p>{{ term }}</p>
-              <!-- <div class="termOne">
-                <p class="word">{{ diagnosis.Issue.Name }}</p>
-                <p class="def">{{ term.def2 }}</p>
+              <div class="termOne">
+                <p class="word">{{ term.word1 }}</p>
+                <p class="def">{{ term.def1 }}</p>
               </div>
               <div class="termTwo">
-                <p class="word">{{ diagnosis.Issue.ProfName }}</p>
+                <p class="word">{{ term.word2 }}</p>
                 <p class="def">{{ term.def2 }}</p>
-              </div> -->
+              </div>
             </div>
           </div>
         </div>
@@ -178,11 +177,14 @@
   <button class="getDiagnosis" @click="openSymptomModal">
     Get a Diagnosis
   </button>
-  <button @click="test">test</button>
+  <!-- <div v-for="(def, index) in this.defList" :key="index">
+    <p>{{ def }}</p>
+    <br />
+  </div>
   <br />
-  <div v-for="(def, index) in this.termsList" :key="index">
-    <p>{{ def.term2 }}</p>
-    <p>{{ def.term1 }}</p>
+  <br /> -->
+  <div class="failsafe" v-for="(def, index) in this.termsList" :key="index">
+    <p>{{ def.term1 }} - {{ def.term2 }}</p>
     <br />
   </div>
 </template>
@@ -204,9 +206,9 @@ export default {
       diagnosis: [],
       conditions: [],
       specialisation: [],
+      termsList: [],
       def: "",
       def2: "",
-      termsList: [],
       defList: [],
       APItoken: process.env.VUE_APP_MEDICAPI_KEY,
       termToken: process.env.VUE_APP_DICTIONARY_KEY,
@@ -216,14 +218,6 @@ export default {
     SymptomModal,
   },
   methods: {
-    test() {
-      fetch(
-        `https://www.dictionaryapi.com/api/v3/references/medical/json/heart%20attack?key=20ede4fa-246b-439a-a38d-d9f84101fd1b`
-      )
-        .then((response) => response.json())
-        .then((data) => console.log(data[0].shortdef[0]))
-        .catch((err) => console.log(err.message));
-    },
     openSymptomModal() {
       this.showSymptomModal = !this.showSymptomModal;
     },
@@ -245,13 +239,11 @@ export default {
       this.getDiagnosis();
     },
     getDiagnosis() {
-      this.diagnosisForm = true;
-      this.diagnosis = [];
       this.termsList = [];
       this.defList = [];
-
+      this.allList = [];
       fetch(
-        `https://healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
+        `https://sandbox-healthservice.priaid.ch/diagnosis?symptoms=${JSON.stringify(
           this.symptomsID
         )}&gender=${this.sex}&year_of_birth=${this.age}&token=${
           this.APItoken
@@ -262,67 +254,60 @@ export default {
         .then((data) => (this.diagnosis = data))
 
         .then(() => {
-          for (let a = 0; this.diagnosis.length; a++) {
+          for (let a = 0; a <= this.diagnosis.length - 1; a++) {
             this.termsList.push({
-              term1: this.diagnosis[a].Issue.ProfName,
-              term2: this.diagnosis[a].Issue.Name,
+              term1: this.diagnosis[a].Issue.Name,
+              term2: this.diagnosis[a].Issue.ProfName,
             });
           }
         })
 
-        // .then(() => {
-        //   for (let a = 0; a <= this.diagnosis.length - 1; a++) {
-        //     this.termsList.push({
-        //       term1: this.diagnosis[a].Issue.Name,
-        //       term2: this.diagnosis[a].Issue.ProfName,
-        //     });
-        //   }
-        // })
+        .then(() => {
+          for (let b = 0; b <= this.termsList.length - 1; b++) {
+            fetch(
+              `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[b].term1}?key=${this.termToken}`
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                if (data[0].length === undefined) {
+                  this.def = data[0].shortdef;
+                } else {
+                  this.def = "No Entry";
+                }
+              })
+              .catch((err) => console.log(err.message));
 
-        // .then(() => {
-        //   for (let b = 0; b <= this.termsList.length - 1; b++) {
-        //     fetch(
-        //       `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[b].term1}?key=${this.termToken}`
-        //     )
-        //       .then((response) => response.json())
-        //       .then((data) => {
-        //         if (data[0].length === undefined) {
-        //           this.def = data[0].shortdef;
-        //         } else {
-        //           this.def = "No Entry";
-        //         }
-        //       })
-        //       .catch((err) => console.log(err.message));
-
-        //     fetch(
-        //       `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[b].term2}?key=${this.termToken}`
-        //     )
-        //       .then((response) => response.json())
-        //       .then((data) => {
-        //         if (data[0].length === undefined) {
-        //           this.defList.push([
-        //             {
-        //               term1: this.termsList[b].term1,
-        //               term2: this.termsList[b].term2,
-        //               def1: this.def,
-        //               def2: data[0].shortdef,
-        //             },
-        //           ]);
-        //         } else {
-        //           this.defList.push([
-        //             {
-        //               term1: this.termsList[b].term1,
-        //               term2: this.termsList[b].term2,
-        //               def1: this.def,
-        //               def2: "No Entry",
-        //             },
-        //           ]);
-        //         }
-        //       })
-        //       .catch((err) => console.log(err.message));
-        //   }
-        // })
-
+            fetch(
+              `https://www.dictionaryapi.com/api/v3/references/medical/json/${this.termsList[b].term2}?key=${this.termToken}`
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                if (data[0].length === undefined) {
+                  this.defList.push([
+                    {
+                      show: false,
+                      word1: this.termsList[b].term1,
+                      word2: this.termsList[b].term2,
+                      def1: this.def,
+                      def2: data[0].shortdef,
+                    },
+                  ]);
+                } else {
+                  this.defList.push([
+                    {
+                      show: false,
+                      word1: this.termsList[b].term1,
+                      word2: this.termsList[b].term2,
+                      def1: this.def,
+                      def2: "No Entry",
+                    },
+                  ]);
+                }
+                this.diagnosisForm = true;
+              })
+              .catch((err) => console.log(err.message));
+          }
+        })
         .catch((err) => console.log(err.message));
     },
     showAddDetail(number) {
@@ -336,7 +321,7 @@ export default {
   },
   mounted() {
     fetch(
-      `https://healthservice.priaid.ch/symptoms?token=${this.APItoken}&format=json&language=en-gb`
+      `https://sandbox-healthservice.priaid.ch/symptoms?token=${this.APItoken}&format=json&language=en-gb`
     )
       .then((response) => response.json())
       .then((data) => (this.symptoms = data))
@@ -380,7 +365,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   border-style: solid;
-  width: 700px;
+  width: 765px;
   margin-left: 15px;
   margin-right: 15px;
   padding: 15px;
@@ -444,7 +429,7 @@ p {
   justify-content: center;
 }
 .addDetail {
-  display: block;
+  display: none;
   flex-direction: column;
   border-style: solid;
   border-width: thin;
@@ -465,7 +450,7 @@ p {
 }
 .word {
   width: 125px;
-  padding-right: 15px;
+  padding-right: 30px;
 }
 .def {
   width: 85%;
@@ -492,5 +477,8 @@ p {
   text-align: left;
   width: 65%;
   padding-left: 7px;
+}
+.failsafe {
+  display: none;
 }
 </style>
